@@ -1,0 +1,32 @@
+import { Issue_ItemRecord } from './Issue_ItemRecord';
+import { Transaction } from './Transaction';
+import { PersonCls } from '../item/persons/PersonCls';
+import { PrivateKeyAccount } from '../account/PrivateKeyAccount';
+
+export class IssuePersonRecord extends Issue_ItemRecord {
+  private static TYPE_ID = Transaction.ISSUE_PERSON_TRANSACTION;
+  private static NAME_ID = 'Issue Person';
+
+  public constructor(
+    creator: PrivateKeyAccount,
+    person: PersonCls,
+    feePow: number,
+    timestamp: number,
+    reference: number,
+    port: number,
+    genesis_sign: Int8Array,
+    isCertify?: boolean,
+  ) {
+    super(
+      new Int8Array([IssuePersonRecord.TYPE_ID, 0, 0, isCertify ? 1 : 0]),
+      IssuePersonRecord.NAME_ID,
+      creator,
+      person,
+      feePow,
+      timestamp,
+      reference,
+      port,
+      genesis_sign,
+    );
+  }
+}

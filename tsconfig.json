@@ -1,0 +1,31 @@
+{
+    "compilerOptions": {
+      "target": "es5",
+      "lib": ["ES2015"],
+      "module": "commonjs",
+      "declaration": true,
+      "outDir": "./lib",
+      "strict": true,
+      "allowSyntheticDefaultImports": true,
+      "noImplicitAny": true,
+      "noUnusedLocals": true,
+      "noImplicitReturns": true,
+      "experimentalDecorators": true,
+      "emitDecoratorMetadata": true,
+      "preserveConstEnums": false,
+      "allowJs": true,
+      "sourceMap": false,
+      "moduleResolution": "node",
+      "alwaysStrict": true,
+      "strictNullChecks": true,
+      "skipLibCheck": true,
+      "strictPropertyInitialization": false,
+      "downlevelIteration": true,
+      "types": [
+        "node",
+        "jest"
+      ] 
+    },
+    "include": ["src"],
+    "exclude": ["node_modules", "**/__tests__/*"]
+}

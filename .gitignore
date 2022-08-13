@@ -1,0 +1,15 @@
+# OSX
+#
+.DS_Store
+.idea
+
+docs/
+
+node_modules/
+lib/
+.jest/
+.prettierrc
+.npmrc
+
+package-lock.json
+yarn.lock

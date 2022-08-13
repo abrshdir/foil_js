@@ -1,0 +1,119 @@
+<html style='height:100%'>
+<head>
+    <title>Erachain Crypto Lib</title>
+    <script type="text/javascript" src="js/erachainapi.js"></script>
+    <script>
+
+        const keys1 = getNewKeys()
+        const keys2 = getNewKeys()
+
+        function getNewKeys() {
+            return EraSDK.EraChain.Crypt.generateKeys();
+        }
+
+        function addressByPublic(public) {
+            return EraSDK.EraChain.Crypt.addressByPublicKey(public)
+        }
+
+        function addressBySecret(secret) {
+            return EraSDK.EraChain.Crypt.addressBySecretKey(secret)
+        }
+
+        function publicBySecret(secret) {
+            return EraSDK.EraChain.Crypt.publicKeyBySecretKey(secret)
+        }
+
+        function sign(msg, secret) {
+            return EraSDK.EraChain.Base58.encode(EraSDK.EraChain.Crypt.sign(msg, secret));
+        }
+
+        function verifySignature(msg, sign, public) {
+            return EraSDK.EraChain.Crypt.verifySign(msg, sign, public);
+        }
+
+        async function testCrypt(msg) {
+            const encrypted = await EraSDK.EraChain.Crypt.encryptMessage(msg, keys2.publicKey, keys1.secretKey);
+            const str = await EraSDK.EraChain.Base58.encode(encrypted);
+            const decrypted = await EraSDK.EraChain.Crypt.decryptMessage(str, keys1.publicKey, keys2.secretKey);
+            return decrypted;
+        }
+
+        async function onLoad() {
+            document.getElementById("secret").innerHTML = "secret key: " + await EraSDK.EraChain.Base58.encode(keys1.secretKey);
+            document.getElementById("public").innerHTML = "public key: " + await EraSDK.EraChain.Base58.encode(keys1.publicKey);
+            document.getElementById("addressByPublic").innerHTML = "address: " + await addressByPublic(keys1.publicKey);
+            document.getElementById("addressBySecret").innerHTML = "address: " +  await addressBySecret(keys1.secretKey);
+            document.getElementById("publicBySecret").innerHTML = "public key: " +  await EraSDK.EraChain.Base58.encode(await publicBySecret(keys1.secretKey));
+            var msg = 'Здравствуй, Erachain Javascript API!';
+            document.getElementById("message").innerHTML = "test message: " + msg;
+
+            var signature =  await sign(EraSDK.EraChain.Bytes.stringToByteArray(msg), keys1.secretKey);
+            document.getElementById("signature").innerHTML = "signature: " + signature;
+            document.getElementById("verifySignature").innerHTML = "verify signature: " +   await verifySignature(await EraSDK.EraChain.Bytes.stringToByteArray(msg),  await EraSDK.EraChain.Base58.decode(signature), keys1.publicKey);
+
+            var decrypted = await testCrypt(msg);
+            document.getElementById("decrypted").innerHTML = "decrypted message: " + decrypted;
+        }
+
+
+
+        function onFileSelected(event) {
+            var selectedFile = event.target.files[0];
+            var reader = new FileReader();
+
+            var imgtag1 = document.getElementById("myimage1");
+            imgtag1.title = selectedFile.name;
+
+            var imgtag2 = document.getElementById("myimage2");
+            imgtag2.title = selectedFile.name;
+
+            reader.onload = async function(event) {
+                imgtag1.src = event.target.result;
+                imgtag2.src = await EraSDK.EraChain.resizeImage(imgtag1.src, 20480, 15360);
+            };
+
+            reader.readAsDataURL(selectedFile);
+        }
+
+    </script>
+
+</head>
+
+<body onload="onLoad()">
+    <div>Generate key pair:</div>
+    <br/>
+    <div id="secret"></div>
+    <div id="public"></div>
+    <br/>
+    <div>Get address by public key:</div>
+    <br/>
+    <div id="addressByPublic"></div>
+    <br/>
+    <div>Get address by private key:</div>
+    <br/>
+    <div id="addressBySecret"></div>
+    <br/>
+    <div>Get public key by private key:</div>
+    <br/>
+    <div id="publicBySecret"></div>
+    <br/>
+    <div>Encrypt:</div>
+    <br/>
+    <div id="message"></div>
+    <br/>
+    <div>Decrypt:</div>
+    <br/>
+    <div id="decrypted"></div>
+    <br/>
+    <div>Generate signature:</div>
+    <br/>
+    <div id="signature"></div>
+    <br/>
+    <div>Verify signature:</div>
+    <br/>
+    <div id="verifySignature"></div>
+    <input type="file" onchange="onFileSelected(event)">
+    <img id="myimage1" />
+    <img id="myimage2" />
+
+</body>
